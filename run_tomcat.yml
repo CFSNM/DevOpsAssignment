@@ -1,0 +1,80 @@
+---
+- name: Run Tomcat Sample Application on Docker Container
+  hosts: tomcat-server
+  vars:
+    tomcatpath: /opt/tomcat-docker
+  become: yes
+  tasks:
+  - name: Install Python3 Package requests
+    command: pip3 install requests
+
+  - name: Install Python3 Package docker
+    command: pip3 install docker
+
+  - name: Run Python Test
+    command: pytest-3
+    register: container_exists
+    ignore_errors: yes
+
+  - block:
+    - name: Remove Build Directory If Exists
+      file:
+        path: "{{tomcatpath}}"
+        state: absent
+      ignore_errors: yes
+
+    - name: Create Build Directory
+      file:
+        path: "{{tomcatpath}}"
+        state: directory
+        mode: 755
+
+    - name: Download Tomcat 9.0.45
+      get_url:
+        url: http://archive.apache.org/dist/tomcat/tomcat-9/v9.0.45/bin/apache-tomcat-9.0.45.tar.gz
+        dest: "{{tomcatpath}}/apache-tomcat-9.0.45.tar.gz"
+        mode: 755
+        force: yes
+
+    - name: Download Tomcat Sample Application
+      get_url:
+        url: https://tomcat.apache.org/tomcat-9.0-doc/appdev/sample/sample.war
+        dest: "{{tomcatpath}}/sample.war"
+        mode: 755
+        force: yes
+
+    - name: Copy start_tomcat.sh script to Build Directory
+      copy:
+        src: start_tomcat.sh
+        dest: "{{tomcatpath}}/start_tomcat.sh"
+        mode: 755
+
+    - name: Copy Dockerfile to Build Directory
+      copy:
+        src: Dockerfile
+        dest: "{{tomcatpath}}/Dockerfile"
+        mode: 755
+
+    - name: Build Docker Image
+      command: "docker build -f Dockerfile -t apache-tomcat-sample:latest ."
+      args:
+        chdir: "{{tomcatpath}}"
+
+    - name: Check Tomcat Container Exists
+      command: docker ps -aqf "name=apache-tomcat-sample-container"
+      register: container
+
+    - block:
+        - name: Remove Tomcat Docker Container
+          command: "docker rm -f {{container.stdout}}"
+      when: container.stdout != ""
+
+    - name: Run Docker Container
+      command: docker run -d -p 8080:8080 --name apache-tomcat-sample-container apache-tomcat-sample:latest
+
+    - name: Remove Build Directory
+      file:
+        path: "{{tomcatpath}}"
+        state: absent
+
+    when: container_exists.rc != 0
