@@ -48,7 +48,7 @@ def test_tomcat():
     containers = docker_client.containers()
     container = None
     for cont in containers:
-        if '/apache-tomcat-sample-container' in cont.Names:
+        if '/apache-tomcat-sample-container' in cont['Names']:
             container = cont
             break
 
