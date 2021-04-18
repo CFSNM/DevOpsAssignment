@@ -38,7 +38,7 @@ outlined in the Application Developer's Guide.
 def get_docker_container_name(name):
     container_to_return = None
     docker_client = docker.from_env()
-    for container in docker_client.container.list():
+    for container in docker_client.containers.list():
         if container.attrs['Name'] == name:
             container_to_return = container
             break
