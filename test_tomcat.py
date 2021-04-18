@@ -35,16 +35,6 @@ outlined in the Application Developer's Guide.
 </html>
     '''
 
-def get_docker_container_name(name):
-    container_to_return = None
-    docker_client = docker.from_env()
-    for container in docker_client.containers.list():
-        if container.attrs['Name'] == name:
-            container_to_return = container
-            break
-    return container_to_return
-
-
 def get_response_content_and_code(url):
     try:
         response = req.get(url)
@@ -54,7 +44,8 @@ def get_response_content_and_code(url):
 
 
 def test_tomcat():
-    container = get_docker_container_name('apache-tomcat-sample-container')
+    docker_client = docker.from_env()
+    container = docker_client.containers.get('apache-tomcat-sample-container')
     content, code = get_response_content_and_code('http://localhost:8080/sample')
     assert container is not None
     assert code == 200
