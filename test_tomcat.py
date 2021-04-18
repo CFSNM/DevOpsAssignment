@@ -37,7 +37,7 @@ outlined in the Application Developer's Guide.
 
 def get_docker_container_name(name):
     container_to_return = None
-    docker_client = docker.DockerClient(base_url='unix://var/run/docker.sock')
+    docker_client = docker.from_env()
     for container in docker_client.container.list():
         if container.attrs['Name'] == name:
             container_to_return = container
