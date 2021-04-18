@@ -55,4 +55,4 @@ def test_tomcat():
     content, code = get_response_content_and_code('http://localhost:8080/sample')
     assert container is not None
     assert code == 200
-    assert content == get_tomcat_sample_app_content()
+    assert '<h1>Sample "Hello, World" Application</h1>' in content
