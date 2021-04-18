@@ -15,14 +15,37 @@ The files which are part of these repository are:
 ## Requirements
 
 Install git:
- - sudo apt-get install git
+```
+sudo apt-get install git
+```
 
+Give permissions to /opt folder:
+```
+sudo chmod -R 755 /opt
+```
 
 ## Steps
 
 - Cloning CFSNM/DevOpsAssignment Github Repository:
-    git clone https://github.com/CFSNM/DevOpsAssignment.git
+  
+```
+  git clone https://github.com/CFSNM/DevOpsAssignment.git
+```
+
+- Go to generated folder:
+```
+  cd DevOpsAssignment/
+```
+
+- Modify ansible_inventory file. This file includes two variables:
+    - [tomcat-server] localhost -> The server where Docker is running.
+    - [ansible-ssh-user] cesar -> The ansible user to execute the playbook (must have root permissions).
 
 
+- Execute Ansible Playbook:
+    ```
+  ansible-playbook -i ansible_inventory run_tomcat.yml -K
+  ```
+  **It will asks for the user root password by prompt. Write it and press enter, and the playbook will start.
 
 
