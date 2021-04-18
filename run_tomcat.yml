@@ -8,8 +8,8 @@
   - name: Install Python3 Package requests
     command: pip3 install requests
 
-  - name: Install Python3 Package docker
-    command: pip3 install docker
+  - name: Install Python3 Package docker-py
+    command: pip3 install docker-py
 
   - name: Run Python Test
     command: pytest-3
