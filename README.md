@@ -9,6 +9,7 @@ The files which are part of these repository are:
 - Dockerfile: The Dockerfile to build the Docker image.
 - LICENSE: The License file of this repository. In this case, it is a BSD 3-Clause License.
 - run_tomcat.yml: The Ansible Playbook to run the entire application.
+- start_tomcat.sh: The Bash Script to Run Tomcat on the Docker Container.
 - test_tomcat.yml: The Pytest Script to check if a Docker Container exposing the Tomcat sample application is already running.
 
 
@@ -38,8 +39,8 @@ sudo chmod -R 755 /opt
 ```
 
 - Modify ansible_inventory file. This file includes two variables:
-    - [tomcat-server] localhost -> The server where Docker is running.
-    - [ansible-ssh-user] cesar -> The ansible user to execute the playbook (must have root permissions).
+    - [tomcat-server] Default value: localhost -> The server where Docker is running.
+    - [ansible-ssh-user] Default value: cesar -> The ansible user to execute the playbook (must have root permissions).
 
 
 - Execute Ansible Playbook:
